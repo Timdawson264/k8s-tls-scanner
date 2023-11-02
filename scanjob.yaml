@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: testssl
+spec:
+  ttlSecondsAfterFinished: 6000
+  template:
+    spec:
+      containers:
+      - name: testssl
+        image: docker.io/drwetter/testssl.sh
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/bash", "-c"]
+        args:
+          - |
+            mkdir -p /tmp/output
+            echo running
+            sleep infinity
+        volumeMounts:
+          - name: services
+            mountPath: /input
+      restartPolicy: Never
+      volumes:
+        - name: services
+          configMap:
+            name: services
+            optional: false
+      
+
